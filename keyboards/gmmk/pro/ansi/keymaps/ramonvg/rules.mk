@@ -1,0 +1,2 @@
+USB_POLLING_INTERVAL_MS = 1
+DEBOUNCE_TYPE = sym_eager_pk
