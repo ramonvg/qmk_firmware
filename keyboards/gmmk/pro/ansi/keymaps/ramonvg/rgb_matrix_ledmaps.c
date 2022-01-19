@@ -52,7 +52,9 @@ void set_layer_rgb(uint8_t led_min, uint8_t led_max, int layer) {
         }
     }
 }
-
+void rgb_matrix_layers_toggle() {
+    enabled = !enabled;
+}
 void rgb_matrix_layers_enable() {
     enabled = true;
 }

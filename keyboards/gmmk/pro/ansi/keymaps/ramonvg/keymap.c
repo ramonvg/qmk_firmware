@@ -2,21 +2,23 @@
 #include "rgb_matrix_ledmaps.h"
 #include "rgb_matrix_ledmaps.c"
 
-enum custom_keycodes { GIT_COMMIT = SAFE_RANGE, JUMP_AUDUR, JUMP_KVIKA, QUOTE_CODE, BREAKPOINT };
+enum custom_keycodes { GIT_COMMIT = SAFE_RANGE, JUMP_AUDUR, JUMP_KVIKA, QUOTE_CODE, BREAKPOINT, RGB_LAYERS_TOGGLE };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+        case RGB_LAYERS_TOGGLE:
+            if (record->event.pressed) {
+                rgb_matrix_layers_toggle();
+            }
+            break;
         case GIT_COMMIT:
             if (record->event.pressed) {
-                // when keycode QMKBEST is pressed
-                // SEND_STRING("git add . && git commit\n");
                 rgb_matrix_layers_enable();
             }
             break;
 
         case JUMP_AUDUR:
             if (record->event.pressed) {
-                // SEND_STRING("jump audur-api\n");
                 rgb_matrix_layers_disable();
             }
             break;
@@ -73,7 +75,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [1] = LAYOUT(
         _______, KC_MYCM, KC_WHOM, KC_CALC, KC_MSEL, KC_MPRV,  KC_MNXT,  KC_MPLY, KC_MSTP, KC_MUTE, KC_VOLD, KC_VOLU, _______, KC_INS,           _______,
-        _______, RGB_TOG, RGB_M_P, RGB_M_B, RGB_M_R, RGB_M_SW, RGB_M_SN, RGB_M_K, RGB_M_X, RGB_M_G, RGB_M_T, _______, _______, _______,          _______,
+        RGB_LAYERS_TOGGLE, RGB_TOG, RGB_M_P, RGB_M_B, RGB_M_R, RGB_M_SW, RGB_M_SN, RGB_M_K, RGB_M_X, RGB_M_G, RGB_M_T, _______, _______, _______,          _______,
         _______, _______, RGB_VAI, RGB_HUI, RGB_SAI, RGB_SPI,  BL_TOGG,  BL_BRTG, BL_ON,   BL_INC,  _______, _______, _______, RESET,            _______,
         _______, _______, RGB_VAD, RGB_HUD, RGB_SAD, RGB_SPD,  BL_STEP,  _______, BL_OFF,  BL_DEC,  _______, _______,          _______,          _______,
         _______,          _______, _______, _______, _______,  _______,  NK_TOGG, _______, _______, _______, _______,          _______, RGB_MOD, _______,
