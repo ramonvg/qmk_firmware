@@ -3,7 +3,7 @@
 #include "rgb_matrix_ledmaps.c"
 #include "encoder.c"
 
-enum custom_keycodes { GIT_COMMIT = SAFE_RANGE, JUMP_AUDUR, JUMP_KVIKA, QUOTE_CODE, BREAKPOINT, RGB_LAYERS_TOGGLE, GIT_ADD, GIT_PUSH, GIT };
+enum custom_keycodes { GIT_COMMIT = SAFE_RANGE, JUMP_AUDUR, JUMP_KVIKA, QUOTE_CODE, BREAKPOINT, RGB_LAYERS_TOGGLE};
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (!record->event.pressed) {
@@ -15,9 +15,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         case GIT_COMMIT:
             SEND_STRING("git commit");
-            break;
-        case GIT_ADD:
-            SEND_STRING("git add .");
             break;
         case JUMP_AUDUR:
             SEND_STRING("jump audur-api\n");
