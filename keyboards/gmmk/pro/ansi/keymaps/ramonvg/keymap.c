@@ -1,25 +1,23 @@
 #include QMK_KEYBOARD_H
+#include "rgb_matrix_ledmaps.h"
+#include "rgb_matrix_ledmaps.c"
 
-enum custom_keycodes {
-    GIT_COMMIT = SAFE_RANGE,
-    JUMP_AUDUR,
-    JUMP_KVIKA,
-    QUOTE_CODE,
-    BREAKPOINT
-};
+enum custom_keycodes { GIT_COMMIT = SAFE_RANGE, JUMP_AUDUR, JUMP_KVIKA, QUOTE_CODE, BREAKPOINT };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case GIT_COMMIT:
             if (record->event.pressed) {
                 // when keycode QMKBEST is pressed
-                SEND_STRING("git add . && git commit\n");
+                // SEND_STRING("git add . && git commit\n");
+                rgb_matrix_layers_enable();
             }
             break;
-        
+
         case JUMP_AUDUR:
             if (record->event.pressed) {
-                SEND_STRING("jump audur-api\n");
+                // SEND_STRING("jump audur-api\n");
+                rgb_matrix_layers_disable();
             }
             break;
 
@@ -30,12 +28,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         case QUOTE_CODE:
             if (record->event.pressed) {
-               SEND_STRING("```\n\n```\n");
+                SEND_STRING("```\n\n```\n");
             }
             break;
         case BREAKPOINT:
             if (record->event.pressed) {
-               SEND_STRING("\nbreakpoint()\n");
+                SEND_STRING("\nbreakpoint()\n");
             }
             break;
     };
@@ -105,22 +103,62 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
         if (IS_LAYER_ON(1)) {
             tap_code(KC_MS_WH_DOWN);
 
-        }
-        else {
+        } else {
             tap_code(KC_VOLU);
         }
 
     } else {
         if (IS_LAYER_ON(2)) {
-            tap_code(KC_MPRV);  
+            tap_code(KC_MPRV);
         }
         if (IS_LAYER_ON(1)) {
             tap_code(KC_MS_WH_UP);
-        }
-        else {
+        } else {
             tap_code(KC_VOLD);
-        }    }
+        }
+    }
     return true;
 }
-#endif // ENCODER_ENABLE
+#endif  // ENCODER_ENABLE
 
+#define ______ AZURE
+
+// clang-format off
+
+//  RGB_MATRIX_LAYOUT_LEDMAP(
+//           RED,    RED, RED, RED, RED, RED, RED, RED, RED, RED, RED, RED, RED, RED, RED,         RED,    RED,
+//           RED,    RED, RED, RED, RED, RED, RED, RED, RED, RED, RED, RED, RED, RED, RED,         RED,    RED,
+//           YELLOW,    YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW,         YELLOW,    YELLOW,
+//           YELLOW,    YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW,         YELLOW,         YELLOW,    YELLOW,
+//           PURPLE,    PURPLE,         PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,         PURPLE, PURPLE, PURPLE,    PURPLE,
+//           PURPLE,    PURPLE,    PURPLE, PURPLE,                         PURPLE,                         PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,    PURPLE
+//     );
+
+const ledmap PROGMEM ledmaps[] = {
+    [0] = RGB_MATRIX_LAYOUT_LEDMAP(
+          PURPLE,    GREEN,  PURPLE,  PURPLE,  PURPLE,  PURPLE,  GREEN, GREEN, GREEN, GREEN, PURPLE,  PURPLE,  PURPLE,  PURPLE,  GREEN,         ______,    PURPLE,
+          GREEN,   PURPLE ,   PURPLE,   PURPLE,   PURPLE, PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , GREEN,           PURPLE,    GREEN,
+          GREEN,   GREEN, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,   PURPLE,         PURPLE,    GREEN,
+          GREEN,     GREEN, PURPLE, PURPLE, PURPLE, PURPLE,   PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,    GREEN,         PURPLE,    GREEN,
+          GREEN,   GREEN,            PURPLE,    PURPLE,    PURPLE,    PURPLE,    PURPLE,    PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,         GREEN,    GREEN, PURPLE,    GREEN,
+          PURPLE,   GREEN, YELLOW,   GREEN,                         PURPLE,                         GREEN, ORANGE, GREEN, GREEN, GREEN, GREEN,    PURPLE
+    ),
+    [1] = RGB_MATRIX_LAYOUT_LEDMAP(
+          PURPLE,    GOLDEN,  PURPLE,  PURPLE,  PURPLE,  PURPLE,  GREEN, GREEN, GREEN, GREEN, PURPLE,  PURPLE,  PURPLE,  PURPLE,  GREEN,         ______,    PURPLE,
+          GREEN,   PURPLE ,   PURPLE,   PURPLE,   PURPLE, PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , GREEN,           PURPLE,    GREEN,
+          GREEN,   GREEN, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,   PURPLE,         PURPLE,    GREEN,
+          GREEN,     GREEN, PURPLE, PURPLE, PURPLE, PURPLE,   PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,    GREEN,         PURPLE,    GREEN,
+          GREEN,   GREEN,            PURPLE,    PURPLE,    PURPLE,    PURPLE,    PURPLE,    PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,         GREEN,    GREEN, PURPLE,    GREEN,
+          PURPLE,   GREEN, YELLOW,   GREEN,                         PURPLE,                         GREEN, ORANGE, GREEN, GREEN, GREEN, GREEN,    PURPLE
+    ),
+    [2] = RGB_MATRIX_LAYOUT_LEDMAP(
+          PURPLE,    MAGENT,  PURPLE,  PURPLE,  PURPLE,  PURPLE,  GREEN, GREEN, GREEN, GREEN, PURPLE,  PURPLE,  PURPLE,  PURPLE,  GREEN,         ______,    PURPLE,
+          GREEN,   PURPLE ,   PURPLE,   PURPLE,   PURPLE, PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , GREEN,           PURPLE,    GREEN,
+          GREEN,   GREEN, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,   PURPLE,         PURPLE,    GREEN,
+          GREEN,     GREEN, PURPLE, PURPLE, PURPLE, PURPLE,   PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,    GREEN,         PURPLE,    GREEN,
+          GREEN,   GREEN,            PURPLE,    PURPLE,    PURPLE,    PURPLE,    PURPLE,    PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,         GREEN,    GREEN, PURPLE,    GREEN,
+          PURPLE,   GREEN, YELLOW,   GREEN,                         PURPLE,                         GREEN, ORANGE, GREEN, GREEN, GREEN, GREEN,    PURPLE
+    ),
+};
+
+// clang-format on
