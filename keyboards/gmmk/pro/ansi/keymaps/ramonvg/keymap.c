@@ -3,41 +3,33 @@
 #include "rgb_matrix_ledmaps.c"
 #include "encoder.c"
 
-enum custom_keycodes { GIT_COMMIT = SAFE_RANGE, JUMP_AUDUR, JUMP_KVIKA, QUOTE_CODE, BREAKPOINT, RGB_LAYERS_TOGGLE };
+enum custom_keycodes { GIT_COMMIT = SAFE_RANGE, JUMP_AUDUR, JUMP_KVIKA, QUOTE_CODE, BREAKPOINT, RGB_LAYERS_TOGGLE, GIT_ADD, GIT_PUSH, GIT };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (!record->event.pressed) {
+        return true;
+    };
     switch (keycode) {
         case RGB_LAYERS_TOGGLE:
-            if (record->event.pressed) {
-                rgb_matrix_layers_toggle();
-            }
+            rgb_matrix_layers_toggle();
             break;
         case GIT_COMMIT:
-            if (record->event.pressed) {
-                rgb_matrix_layers_enable();
-            }
+            SEND_STRING("git commit");
             break;
-
+        case GIT_ADD:
+            SEND_STRING("git add .");
+            break;
         case JUMP_AUDUR:
-            if (record->event.pressed) {
-                rgb_matrix_layers_disable();
-            }
+            SEND_STRING("jump audur-api\n");
             break;
-
         case JUMP_KVIKA:
-            if (record->event.pressed) {
-                SEND_STRING("jump kvika-api\n");
-            }
+            SEND_STRING("jump kvika-api\n");
             break;
         case QUOTE_CODE:
-            if (record->event.pressed) {
-                SEND_STRING("```\n\n```\n");
-            }
+            SEND_STRING("```\n\n```\n");
             break;
         case BREAKPOINT:
-            if (record->event.pressed) {
-                SEND_STRING("\nbreakpoint()\n");
-            }
+            SEND_STRING("\nbreakpoint()\n");
             break;
     };
     return true;
@@ -92,11 +84,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,          _______, _______, GIT_COMMIT, _______,  BREAKPOINT,  _______, _______, _______, _______, _______,          _______, KC_PGUP, _______,
         _______, _______, _______,                             _______,                             _______, _______, _______, KC_HOME, KC_PGDN, KC_END
     ),
-
-
 };
 // clang-format on
-
 
 #define ______ AZURE
 
