@@ -1,6 +1,7 @@
 #include QMK_KEYBOARD_H
 #include "rgb_matrix_ledmaps.h"
 #include "rgb_matrix_ledmaps.c"
+#include "encoder.c"
 
 enum custom_keycodes { GIT_COMMIT = SAFE_RANGE, JUMP_AUDUR, JUMP_KVIKA, QUOTE_CODE, BREAKPOINT, RGB_LAYERS_TOGGLE };
 
@@ -96,32 +97,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 // clang-format on
 
-#ifdef ENCODER_ENABLE
-bool encoder_update_user(uint8_t index, bool clockwise) {
-    if (clockwise) {
-        if (IS_LAYER_ON(2)) {
-            tap_code(KC_MNXT);
-        }
-        if (IS_LAYER_ON(1)) {
-            tap_code(KC_MS_WH_DOWN);
-
-        } else {
-            tap_code(KC_VOLU);
-        }
-
-    } else {
-        if (IS_LAYER_ON(2)) {
-            tap_code(KC_MPRV);
-        }
-        if (IS_LAYER_ON(1)) {
-            tap_code(KC_MS_WH_UP);
-        } else {
-            tap_code(KC_VOLD);
-        }
-    }
-    return true;
-}
-#endif  // ENCODER_ENABLE
 
 #define ______ AZURE
 
