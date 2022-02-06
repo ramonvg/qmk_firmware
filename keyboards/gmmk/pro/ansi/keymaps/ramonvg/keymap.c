@@ -3,7 +3,8 @@
 #include "rgb_matrix_ledmaps.c"
 #include "encoder.c"
 
-enum custom_keycodes { GIT_COMMIT = SAFE_RANGE, JUMP_AUDUR, JUMP_KVIKA, QUOTE_CODE, BREAKPOINT, RGB_LAYERS_TOGGLE};
+
+enum custom_keycodes { GIT_COMMIT = SAFE_RANGE, JUMP_AUDUR, JUMP_KVIKA, QUOTE_CODE, BREAKPOINT, RGB_LAYERS_TOGGLE, BRB};
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (!record->event.pressed) {
@@ -28,6 +29,22 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case BREAKPOINT:
             SEND_STRING("\nbreakpoint()\n");
             break;
+        case BRB:
+            // Move to chat workspace 
+            register_code(KC_LGUI);
+            tap_code(KC_C);
+            unregister_code(KC_LGUI);
+
+            // Search for channel            
+            wait_ms(500);
+            register_code(KC_LCTL);
+            tap_code(KC_K);
+            unregister_code(KC_LCTL);
+            wait_ms(500);
+     
+            SEND_STRING("kvika-backend");
+            tap_code(KC_ENT);
+
     };
     return true;
 };
@@ -55,18 +72,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // Since this is, among other things, a "gaming" keyboard, a key combination to enable NKRO on the fly is provided for convenience.
     // Press Fn+N to toggle between 6KRO and NKRO. This setting is persisted to the EEPROM and thus persists between restarts.
     [0] = LAYOUT(
-        KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_PSCR,           KC_MPLY,
-        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,          KC_PGUP,
-        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,          KC_PGDN,
-        LT(2, KC_CAPS), KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,           KC_END,
-        KC_LSFT,          KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          KC_RSFT, KC_UP,   KC_DEL,
-        KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(1),   KC_RCTL, KC_LEFT, KC_DOWN, KC_RGHT
+        //KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_PSCR,           KC_MPLY,
+        _______, _______, _______, _______, _______, _______,  _______,  _______, _______, _______, _______, _______, _______, _______,           KC_MPLY,
+        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,          TO(1),
+        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,          _______,
+        LT(2, KC_CAPS), KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,           _______,
+        KC_LSFT,          KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          KC_RSFT, _______,   _______,
+        KC_LCTL, KC_LGUI, KC_LALT,                             LT(3, KC_SPC),                             KC_RALT, MO(1),   KC_RCTL, _______, _______, _______
     ),
 
     [1] = LAYOUT(
         _______, KC_MYCM, KC_WHOM, KC_CALC, KC_MSEL, KC_MPRV,  KC_MNXT,  KC_MPLY, KC_MSTP, KC_MUTE, KC_VOLD, KC_VOLU, _______, KC_INS,           _______,
-        RGB_LAYERS_TOGGLE, RGB_TOG, RGB_M_P, RGB_M_B, RGB_M_R, RGB_M_SW, RGB_M_SN, RGB_M_K, RGB_M_X, RGB_M_G, RGB_M_T, _______, _______, _______,          _______,
-        _______, _______, RGB_VAI, RGB_HUI, RGB_SAI, RGB_SPI,  BL_TOGG,  BL_BRTG, BL_ON,   BL_INC,  _______, _______, _______, RESET,            _______,
+        RGB_LAYERS_TOGGLE, RGB_TOG, RGB_M_P, RGB_M_B, RGB_M_R, RGB_M_SW, RGB_M_SN, RGB_M_K, RGB_M_X, RGB_M_G, RGB_M_T, _______, _______, _______,          TO(2),
+        _______, _______, RGB_VAI, RGB_HUI, RGB_SAI, RGB_SPI,  BL_TOGG,  BL_BRTG, BL_ON,   BL_INC,  _______, _______, _______, RESET,             TO(0),
         _______, _______, RGB_VAD, RGB_HUD, RGB_SAD, RGB_SPD,  BL_STEP,  _______, BL_OFF,  BL_DEC,  _______, _______,          _______,          _______,
         _______,          _______, _______, _______, _______,  _______,  NK_TOGG, _______, _______, _______, _______,          _______, RGB_MOD, _______,
         _______, _______, _______,                             _______,                             _______, _______, _______, RGB_SPD, RGB_RMOD, RGB_SPI
@@ -75,11 +93,29 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [2] = LAYOUT(
         _______, _______, _______, _______, _______, _______,  _______,  _______, _______, _______, _______, _______, _______, _______,           KC_MUTE,
-        QUOTE_CODE, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
-        _______, _______, _______, _______, _______, _______,  _______,  _______, _______,   _______,  _______, _______, _______, RESET,            _______,
-        _______, JUMP_AUDUR, _______, _______, _______, _______,  _______,  _______, JUMP_KVIKA,  _______,  _______, _______,          _______,          _______,
+        QUOTE_CODE, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,           TO(3),
+        _______, _______, _______, _______, _______, _______,  _______,  _______, _______,   _______,  _______, _______, _______, _______,             TO(1),
+        _______, JUMP_AUDUR, _______, _______, _______, _______,  KC_HOME,  KC_PGUP, KC_PGDN,  KC_END,  _______, _______,          _______,          _______,
         _______,          _______, _______, GIT_COMMIT, _______,  BREAKPOINT,  _______, _______, _______, _______, _______,          _______, KC_PGUP, _______,
-        _______, _______, _______,                             _______,                             _______, _______, _______, KC_HOME, KC_PGDN, KC_END
+        _______, _______, _______,                             BRB,                             _______, _______, _______, KC_HOME, KC_PGDN, KC_END
+    ),
+
+    [3] = LAYOUT(
+        _______, _______, _______, _______, _______, _______,  _______,  _______, _______, _______, _______, _______, _______, _______,           _______,
+        KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_DEL,           TO(4),
+        _______, _______, _______, _______, _______, _______,  _______,  _______, _______,   _______,  _______, _______, _______, _______,            TO(2),
+        _______, _______, _______, _______, _______, _______,  KC_LEFT,  KC_DOWN, KC_UP,  KC_RGHT,  _______, _______,          _______,           _______,
+        _______,          _______, _______, _______, _______,  _______,  _______, _______, _______, _______, _______,          _______, _______, _______,
+        _______, _______, _______,                             _______,                             _______, _______, _______, _______, _______, _______
+    ),
+
+    [4] = LAYOUT(
+        KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_PSCR,           KC_MPLY,
+        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,          _______,
+        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,          TO(3),
+        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,           KC_END,
+        KC_LSFT,          KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          KC_RSFT, KC_UP,   KC_DEL,
+        KC_LCTL, KC_LGUI, KC_LALT,                             KC_SPC,                            KC_RALT, MO(1),   KC_RCTL, KC_LEFT, KC_DOWN, KC_RGHT
     ),
 };
 // clang-format on
@@ -99,7 +135,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 const ledmap PROGMEM ledmaps[] = {
     [0] = RGB_MATRIX_LAYOUT_LEDMAP(
-          PURPLE,    GREEN,  PURPLE,  PURPLE,  PURPLE,  PURPLE,  GREEN, GREEN, GREEN, GREEN, PURPLE,  PURPLE,  PURPLE,  PURPLE,  GREEN,         ______,    PURPLE,
+          PURPLE,    GREEN,  YELLOW,  PURPLE,  PURPLE,  PURPLE,  GREEN, GREEN, GREEN, GREEN, PURPLE,  PURPLE,  PURPLE,  PURPLE,  GREEN,         ______,    PURPLE,
           GREEN,   PURPLE ,   PURPLE,   PURPLE,   PURPLE, PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , GREEN,           PURPLE,    GREEN,
           GREEN,   GREEN, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,   PURPLE,         PURPLE,    GREEN,
           GREEN,     GREEN, PURPLE, PURPLE, PURPLE, PURPLE,   PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,    GREEN,         PURPLE,    GREEN,
@@ -107,7 +143,7 @@ const ledmap PROGMEM ledmaps[] = {
           PURPLE,   GREEN, YELLOW,   GREEN,                         PURPLE,                         GREEN, ORANGE, GREEN, GREEN, GREEN, GREEN,    PURPLE
     ),
     [1] = RGB_MATRIX_LAYOUT_LEDMAP(
-          PURPLE,    GOLDEN,  PURPLE,  PURPLE,  PURPLE,  PURPLE,  GREEN, GREEN, GREEN, GREEN, PURPLE,  PURPLE,  PURPLE,  PURPLE,  GREEN,         ______,    PURPLE,
+          PURPLE,    GREEN,  PURPLE,  YELLOW,  PURPLE,  PURPLE,  GREEN, GREEN, GREEN, GREEN, PURPLE,  PURPLE,  PURPLE,  PURPLE,  GREEN,         ______,    PURPLE,
           GREEN,   PURPLE ,   PURPLE,   PURPLE,   PURPLE, PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , GREEN,           PURPLE,    GREEN,
           GREEN,   GREEN, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,   PURPLE,         PURPLE,    GREEN,
           GREEN,     GREEN, PURPLE, PURPLE, PURPLE, PURPLE,   PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,    GREEN,         PURPLE,    GREEN,
@@ -115,7 +151,23 @@ const ledmap PROGMEM ledmaps[] = {
           PURPLE,   GREEN, YELLOW,   GREEN,                         PURPLE,                         GREEN, ORANGE, GREEN, GREEN, GREEN, GREEN,    PURPLE
     ),
     [2] = RGB_MATRIX_LAYOUT_LEDMAP(
-          PURPLE,    MAGENT,  PURPLE,  PURPLE,  PURPLE,  PURPLE,  GREEN, GREEN, GREEN, GREEN, PURPLE,  PURPLE,  PURPLE,  PURPLE,  GREEN,         ______,    PURPLE,
+          PURPLE,    GREEN,  PURPLE,  PURPLE,  YELLOW,  PURPLE,  GREEN, GREEN, GREEN, GREEN, PURPLE,  PURPLE,  PURPLE,  PURPLE,  GREEN,         ______,    PURPLE,
+          GREEN,   PURPLE ,   PURPLE,   PURPLE,   PURPLE, PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , GREEN,           PURPLE,    GREEN,
+          GREEN,   GREEN, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,   PURPLE,         PURPLE,    GREEN,
+          GREEN,     GREEN, PURPLE, PURPLE, PURPLE, PURPLE,   PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,    GREEN,         PURPLE,    GREEN,
+          GREEN,   GREEN,            PURPLE,    PURPLE,    PURPLE,    PURPLE,    PURPLE,    PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,         GREEN,    GREEN, PURPLE,    GREEN,
+          PURPLE,   GREEN, YELLOW,   GREEN,                         PURPLE,                         GREEN, ORANGE, GREEN, GREEN, GREEN, GREEN,    PURPLE
+    ),
+    [3] = RGB_MATRIX_LAYOUT_LEDMAP(
+          PURPLE,    GREEN,  PURPLE,  PURPLE,  PURPLE,  YELLOW,  GREEN, GREEN, GREEN, GREEN, PURPLE,  PURPLE,  PURPLE,  PURPLE,  GREEN,         ______,    PURPLE,
+          GREEN,   PURPLE ,   PURPLE,   PURPLE,   PURPLE, PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , GREEN,           PURPLE,    GREEN,
+          GREEN,   GREEN, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,   PURPLE,         PURPLE,    GREEN,
+          GREEN,     GREEN, PURPLE, PURPLE, PURPLE, PURPLE,   PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,    GREEN,         PURPLE,    GREEN,
+          GREEN,   GREEN,            PURPLE,    PURPLE,    PURPLE,    PURPLE,    PURPLE,    PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,         GREEN,    GREEN, PURPLE,    GREEN,
+          PURPLE,   GREEN, YELLOW,   GREEN,                         PURPLE,                         GREEN, ORANGE, GREEN, GREEN, GREEN, GREEN,    PURPLE
+    ),
+    [4] = RGB_MATRIX_LAYOUT_LEDMAP(
+          PURPLE,    GREEN,  PURPLE,  PURPLE,  PURPLE,  PURPLE,  YELLOW, GREEN, GREEN, GREEN, PURPLE,  PURPLE,  PURPLE,  PURPLE,  GREEN,         ______,    PURPLE,
           GREEN,   PURPLE ,   PURPLE,   PURPLE,   PURPLE, PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , PURPLE , GREEN,           PURPLE,    GREEN,
           GREEN,   GREEN, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,   PURPLE,         PURPLE,    GREEN,
           GREEN,     GREEN, PURPLE, PURPLE, PURPLE, PURPLE,   PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PURPLE,    GREEN,         PURPLE,    GREEN,
