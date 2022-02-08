@@ -21,36 +21,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 enum custom_keycodes { C_SPC = SAFE_RANGE};
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    static uint16_t my_hash_timer;
-    switch (keycode) {
-        case C_SPC:
-            if(record->event.pressed) {
-                my_hash_timer = timer_read();
-                register_code(KC_LGUI); // Change the key to be held here
-                layer_on(1);
-            } else {
-                unregister_code(KC_LGUI); // Change the key that was held here, too!
-                layer_off(1);
-                if (timer_elapsed(my_hash_timer) < TAPPING_TERM) {
-                    SEND_STRING(" "); // Change the character(s) to be sent on tap here
-                }
-            }
-            return false; // We handled this keypress
-    }
-    return true; // We didn't handle other keypresses
-};
+
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
        KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LSFT,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_QUOT,
+      KC_LSFT,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, C_SPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LCTL,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  KC_RCTL,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI,   MO(1),  C_SPC,     KC_ENT,   MO(2), KC_RALT
+                                          KC_LGUI,   MO(1),  KC_SPC,     KC_ENT,   MO(2), KC_RALT
                                       //`--------------------------'  `--------------------------'
 
   ),
@@ -69,9 +51,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [2] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      KC_ESC, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC,                      KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSPC,
+      KC_GRV, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC,                      KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_MINS,  KC_EQL, KC_LBRC, KC_RBRC, KC_BSLS,  KC_GRV,
+      KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_MINS,  KC_EQL, KC_LBRC, KC_RBRC, KC_BSLS,  KC_QUOT,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LCTL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE, KC_TILD,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
@@ -92,7 +74,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   )
 };
 
-#ifdef OLED_ENABLE
+// #ifdef OLED_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
   if (!is_keyboard_master()) {
     return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
@@ -189,4 +171,25 @@ bool oled_task_user(void) {
     return false;
 }
 
-#endif // OLED_ENABLE
+// #endif // OLED_ENABLE
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    static uint16_t my_hash_timer;
+    set_keylog(keycode, record);
+    switch (keycode) {
+        case C_SPC:
+            if(record->event.pressed) {
+                my_hash_timer = timer_read();
+                register_code(KC_LGUI); // Change the key to be held here
+                layer_on(1);
+            } else {
+                unregister_code(KC_LGUI); // Change the key that was held here, too!
+                layer_off(1);
+                if (timer_elapsed(my_hash_timer) < TAPPING_TERM) {
+                    tap_code(KC_QUOT); // Change the character(s) to be sent on tap here
+                }
+            }
+            return false; // We handled this keypress
+    }                                         
+    return true; // We didn't handle other keypresses
+};
