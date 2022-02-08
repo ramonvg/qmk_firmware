@@ -19,6 +19,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include QMK_KEYBOARD_H
 #include <stdio.h>
 
+enum custom_keycodes { C_SPC = SAFE_RANGE};
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    static uint16_t my_hash_timer;
+    switch (keycode) {
+        case C_SPC:
+            if(record->event.pressed) {
+                my_hash_timer = timer_read();
+                register_code(KC_LGUI); // Change the key to be held here
+                layer_on(1);
+            } else {
+                unregister_code(KC_LGUI); // Change the key that was held here, too!
+                layer_off(1);
+                if (timer_elapsed(my_hash_timer) < TAPPING_TERM) {
+                    SEND_STRING(" "); // Change the character(s) to be sent on tap here
+                }
+            }
+            return false; // We handled this keypress
+    }
+    return true; // We didn't handle other keypresses
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
@@ -28,7 +50,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LCTL,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  KC_RCTL,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI,   MO(1),  KC_SPC,     KC_ENT,   MO(2), KC_RALT
+                                          KC_LGUI,   MO(1),  C_SPC,     KC_ENT,   MO(2), KC_RALT
                                       //`--------------------------'  `--------------------------'
 
   ),
@@ -167,10 +189,4 @@ bool oled_task_user(void) {
     return false;
 }
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  if (record->event.pressed) {
-    // set_keylog(keycode, record);
-  }
-  return true;
-}
 #endif // OLED_ENABLE
