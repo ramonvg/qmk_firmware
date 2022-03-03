@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include QMK_KEYBOARD_H
 #include <stdio.h>
 
-enum custom_keycodes { C_SPC = SAFE_RANGE};/* 
+enum custom_keycodes { C_GUI = SAFE_RANGE};/* 
  */
 
 #define C_GUI_TAB MT(MOD_LGUI, KC_TAB)
@@ -34,7 +34,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LCTL,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_LALT, KC_RCTL,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          C_SPC,   MO(1),  KC_SPC,     KC_ENT,   MO(2), KC_RALT
+                                            MO(1),   C_GUI,  KC_SPC,     KC_ENT,   MO(2), KC_RALT
                                       //`--------------------------'  `--------------------------'
 
   ),
@@ -43,11 +43,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       KC_ESC,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                         KC_6,    KC_7,    KC_8,    KC_9,    KC_0,  KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT, XXXXXXX, XXXXXXX,
+      KC_LSFT,   KC_4,    KC_5,    KC_6,    KC_0, XXXXXXX,                      KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT,XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LCTL, XXXXXXX, XXXXXXX,    KC_C, XXXXXXX, XXXXXXX,                      XXXXXXX,    KC_M, XXXXXXX, _______, XXXXXXX, XXXXXXX,
+      KC_LCTL,   KC_7,    KC_8,    KC_9,    XXXXXXX, XXXXXXX,                      XXXXXXX,    KC_M, XXXXXXX, _______, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI, _______,  KC_SPC,     KC_ENT,   MO(3), KC_RALT
+                                          _______, KC_LGUI,  KC_SPC,     KC_ENT,   MO(3), KC_RALT
                                       //`--------------------------'  `--------------------------'
   ),
 
@@ -178,7 +178,7 @@ bool oled_task_user(void) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     set_keylog(keycode, record);
     switch (keycode) {
-        case C_SPC:
+        case C_GUI:
             if(record->event.pressed) {
                 register_code(KC_LGUI); // Change the key to be held here
                 layer_on(1);
