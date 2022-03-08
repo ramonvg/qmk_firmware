@@ -32,7 +32,6 @@ enum custom_keycodes {
 #define C_GUI_TAB MT(MOD_LGUI, KC_TAB)
 #define C_ALT_BSPC MT(KC_LALT, KC_BSPC)
 
-
 #define L_BASE 0
 #define L_NUMBERS 1
 #define L_SYMBOLS 2
@@ -109,7 +108,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     return state;
 }
 
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case C_GUI:
@@ -124,3 +122,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     return true; // We didn't handle other keypresses
 };
+
+// report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
+//     if (layer_state_is(L_SYMBOLS)) {
+//         pimoroni_trackball_set_rgbw(0, 0, 0, 0);
+//     }
+//     return pointing_device_task_user(mouse_report);
+// }
+
+report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
+    if (layer_state_is(L_NUMBERS)) {
+        // mouse_report.h = mouse_report.x;
+        // mouse_report.v = mouse_report.y;
+        mouse_report.x = mouse_report.x * 5;
+        mouse_report.y = mouse_report.y * 5;
+    }
+    return mouse_report;
+}

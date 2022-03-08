@@ -46,4 +46,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define OLED_FONT_H "keyboards/crkbd/lib/glcdfont.c"
 
 #define POINTING_DEVICE_ROTATION_90
-#define PIMORONI_TRACKBALL_SCALE 20
+#define PIMORONI_TRACKBALL_SCALE 5
