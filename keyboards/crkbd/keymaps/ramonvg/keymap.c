@@ -9,7 +9,7 @@ the Free Software Foundation, either version 2 of the License, or
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS zFOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
@@ -20,16 +20,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include "drivers/sensors/pimoroni_trackball.h"
 
-#define POINTING_DEVICE_ROTATION_180 
 void keyboard_post_init_user(void) {
-  trackball_set_rgbw(255,0,0,0);
+    pimoroni_trackball_set_rgbw(52, 235, 164, 0);
 }
 
-enum custom_keycodes { C_GUI = SAFE_RANGE};/* 
- */
+enum custom_keycodes {
+    C_GUI = SAFE_RANGE
+}; /*
+    */
 
 #define C_GUI_TAB MT(MOD_LGUI, KC_TAB)
 #define C_ALT_BSPC MT(KC_LALT, KC_BSPC)
+
+// clang-format off
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_split_3x6_3(
@@ -81,48 +84,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                       //`--------------------------'  `--------------------------'
   )
 };
-
-
+// clang-format on
 
 #define L_BASE 0
 #define L_LOWER 2
 #define L_RAISE 4
 #define L_ADJUST 8
 
-
-
-char keylog_str[24] = {};
-
-const char code_to_name[60] = {
-    ' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
-    'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
-    'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-    '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
-    'R', 'E', 'B', 'T', '_', '-', '=', '[', ']', '\\',
-    '#', ';', '\'', '`', ',', '.', '/', ' ', ' ', ' '};
-
-void set_keylog(uint16_t keycode, keyrecord_t *record) {
-  char name = ' ';
-    if ((keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) ||
-        (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX)) { keycode = keycode & 0xFF; }
-  if (keycode < 60) {
-    name = code_to_name[keycode];
-  }
-
-  // update keylog
-  snprintf(keylog_str, sizeof(keylog_str), "%dx%d, k%2d : %c",
-           record->event.key.row, record->event.key.col,
-           keycode, name);
-}
-
-
-
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    set_keylog(keycode, record);
     switch (keycode) {
         case C_GUI:
-            if(record->event.pressed) {
+            if (record->event.pressed) {
                 register_code(KC_LGUI); // Change the key to be held here
                 layer_on(1);
             } else {
@@ -130,6 +102,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 layer_off(1);
             }
             return false; // We handled this keypress
-    }                                         
+    }
     return true; // We didn't handle other keypresses
 };
+
+report_mouse_t pointing_device_set_report(report_mouse_t mouse_report) {}
