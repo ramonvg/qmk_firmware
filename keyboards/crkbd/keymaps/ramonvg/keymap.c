@@ -32,6 +32,11 @@ enum custom_keycodes {
 #define C_GUI_TAB MT(MOD_LGUI, KC_TAB)
 #define C_ALT_BSPC MT(KC_LALT, KC_BSPC)
 
+
+#define L_BASE 0
+#define L_LOWER 2
+#define L_RAISE 4
+#define L_ADJUST 8
 // clang-format off
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -86,10 +91,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 // clang-format on
 
-#define L_BASE 0
-#define L_LOWER 2
-#define L_RAISE 4
-#define L_ADJUST 8
+layer_state_t layer_state_set_user(layer_state_t state) {
+    switch (get_highest_layer(state)) {
+        case L_RAISE:
+            pimoroni_trackball_set_rgbw(255, 0, 0, 0);
+            break;
+        case L_LOWER:
+            pimoroni_trackball_set_rgbw(0, 255, 0, 0);
+            break;
+        case L_ADJUST:
+            pimoroni_trackball_set_rgbw(0, 0, 255, 0);
+            break;
+        default: //  for any other layers, or the default layer
+            pimoroni_trackball_set_rgbw(52, 235, 164, 0);
+            break;
+    }
+    return state;
+}
+
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
@@ -105,5 +124,3 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     return true; // We didn't handle other keypresses
 };
-
-report_mouse_t pointing_device_set_report(report_mouse_t mouse_report) {}
