@@ -147,20 +147,19 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
 }
 
 void dance_cln_finished(qk_tap_dance_state_t *state, void *user_data) {
-    print("dance_cln_finished");
     if (state->count == 1) {
         register_code(KC_A);
     } else {
         if (is_shifted) {
             unregister_code(KC_LSFT);
         }
-        register_code16(KC_RALT);
+        register_code(KC_RALT);
     }
     if (state->count == 2) {
-        register_code16(KC_QUOT);
+        register_code(KC_QUOT);
     }
     if (state->count == 3) {
-        register_code16(KC_GRV);
+        register_code(KC_GRV);
     }
 }
 
@@ -168,12 +167,12 @@ void dance_cln_reset(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
         unregister_code(KC_A);
     } else {
-        unregister_code16(KC_RALT);
+        unregister_code(KC_RALT);
         if (state->count == 2) {
-            unregister_code16(KC_GRV);
+            unregister_code(KC_GRV);
         }
         if (state->count == 3) {
-            unregister_code16(KC_QUOT);
+            unregister_code(KC_QUOT);
         }
         if (is_shifted) {
             register_code(KC_LSFT);
