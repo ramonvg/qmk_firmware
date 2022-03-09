@@ -41,11 +41,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       KC_TAB,     KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LSFT, TD(TD_A),    KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_LGUI,
+      KC_LSFT,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_LGUI,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LCTL,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_LALT, KC_RCTL,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                            MO(1),   C_GUI,  KC_SPC,     KC_ENT,   MO(2), KC_RALT
+                                            MO(1),   C_GUI,  KC_SPC,     KC_ENT,   MO(2), TD(TD_A)
                                       //`--------------------------'  `--------------------------'
 
   ),
@@ -119,8 +119,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case KC_LSFT:
             if (record->event.pressed) {
                 is_shifted = true;
+                register_code(KC_LSFT);
             } else {
                 is_shifted = false;
+                unregister_code(KC_LSFT);
             }
             return false; // We handled this keypress
         case C_GUI:
@@ -147,42 +149,23 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
 }
 
 void dance_cln_finished(qk_tap_dance_state_t *state, void *user_data) {
+    register_code(KC_RALT);
     if (state->count == 1) {
-        register_code(KC_A);
-    } else {
-        if (is_shifted) {
-            unregister_code(KC_LSFT);
-        }
-        register_code(KC_RALT);
-    }
-    if (state->count == 2) {
         register_code(KC_QUOT);
     }
-    if (state->count == 3) {
+    if (state->count == 2) {
         register_code(KC_GRV);
     }
 }
 
 void dance_cln_reset(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
-        unregister_code(KC_A);
-    } else {
-        unregister_code(KC_RALT);
-        if (state->count == 2) {
-            unregister_code(KC_GRV);
-        }
-        if (state->count == 3) {
-            unregister_code(KC_QUOT);
-        }
-        if (is_shifted) {
-            register_code(KC_LSFT);
-        }
-        tap_code(KC_A);
-
-        if (is_shifted) {
-            unregister_code(KC_LSFT);
-        }
+        unregister_code(KC_QUOT);
     }
+    if (state->count == 2) {
+        unregister_code(KC_GRV);
+    }
+    unregister_code(KC_RALT);
 }
 
 // All tap dance functions would go here. Only showing this one.
