@@ -110,11 +110,21 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     }
     return state;
 }
+bool is_shifted = false;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     print("process_record_user");
 
     switch (keycode) {
+        case KC_LSFT:
+            if (record->event.pressed) {
+                is_shifted = true;
+                register_code16(KC_LSFT);
+            } else {
+                is_shifted = false;
+                unregister_code16(KC_LSFT);
+            }
+            return false; // We handled this keypress
         case C_GUI:
             if (record->event.pressed) {
                 register_code(KC_LGUI); // Change the key to be held here
@@ -142,32 +152,39 @@ void dance_cln_finished(qk_tap_dance_state_t *state, void *user_data) {
     print("dance_cln_finished");
     if (state->count == 1) {
         register_code(KC_A);
+    } else {
+        if (is_shifted) {
+            unregister_code16(KC_LSFT);
+        }
+        register_code16(KC_RALT);
     }
     if (state->count == 2) {
-        register_code16(KC_RALT);
         register_code16(KC_QUOT);
     }
     if (state->count == 3) {
-        register_code16(KC_RALT);
         register_code16(KC_GRV);
     }
 }
 
 void dance_cln_reset(qk_tap_dance_state_t *state, void *user_data) {
-    print("dance_cln_reset");
-
     if (state->count == 1) {
         unregister_code(KC_A);
-    }
-    if (state->count == 2) {
+    } else {
         unregister_code16(KC_RALT);
-        unregister_code16(KC_GRV);
+        if (state->count == 2) {
+            unregister_code16(KC_GRV);
+        }
+        if (state->count == 3) {
+            unregister_code16(KC_QUOT);
+        }
+        if (is_shifted) {
+            register_code16(KC_LSFT);
+        }
         tap_code(KC_A);
-    }
-    if (state->count == 3) {
-        unregister_code16(KC_RALT);
-        unregister_code16(KC_QUOT);
-        tap_code(KC_A);
+
+        if (is_shifted) {
+            unregister_code16(KC_LSFT);
+        }
     }
 }
 
