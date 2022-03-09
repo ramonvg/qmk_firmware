@@ -119,10 +119,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case KC_LSFT:
             if (record->event.pressed) {
                 is_shifted = true;
-                register_code16(KC_LSFT);
             } else {
                 is_shifted = false;
-                unregister_code16(KC_LSFT);
             }
             return false; // We handled this keypress
         case C_GUI:
@@ -154,7 +152,7 @@ void dance_cln_finished(qk_tap_dance_state_t *state, void *user_data) {
         register_code(KC_A);
     } else {
         if (is_shifted) {
-            unregister_code16(KC_LSFT);
+            unregister_code(KC_LSFT);
         }
         register_code16(KC_RALT);
     }
@@ -178,12 +176,12 @@ void dance_cln_reset(qk_tap_dance_state_t *state, void *user_data) {
             unregister_code16(KC_QUOT);
         }
         if (is_shifted) {
-            register_code16(KC_LSFT);
+            register_code(KC_LSFT);
         }
         tap_code(KC_A);
 
         if (is_shifted) {
-            unregister_code16(KC_LSFT);
+            unregister_code(KC_LSFT);
         }
     }
 }
