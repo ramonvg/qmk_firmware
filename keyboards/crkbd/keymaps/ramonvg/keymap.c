@@ -19,15 +19,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include QMK_KEYBOARD_H
 #include <stdio.h>
 #include "drivers/sensors/pimoroni_trackball.h"
-
-void keyboard_post_init_user(void) {
-    pimoroni_trackball_set_rgbw(52, 235, 164, 0);
-}
+#include <print.h>
 
 enum custom_keycodes {
-    C_GUI = SAFE_RANGE
-}; /*
-    */
+    C_GUI = SAFE_RANGE,
+};
+
+enum { TD_A };
 
 #define C_GUI_TAB MT(MOD_LGUI, KC_TAB)
 #define C_ALT_BSPC MT(KC_LALT, KC_BSPC)
@@ -43,7 +41,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       KC_TAB,     KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LSFT,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_LGUI,
+      KC_LSFT, TD(TD_A),    KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_LGUI,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LCTL,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_LALT, KC_RCTL,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
@@ -56,7 +54,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       KC_ESC,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                         KC_6,    KC_7,    KC_8,    KC_9,    KC_0,  KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LSFT,   KC_4,    KC_5,    KC_6,    KC_0, XXXXXXX,                      KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT,XXXXXXX, XXXXXXX,
+      KC_LSFT,   KC_4,    KC_5,    KC_6,    KC_0,    DEBUG,                      KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT,XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LCTL,   KC_7,    KC_8,    KC_9,    XXXXXXX, XXXXXXX,                      XXXXXXX,    KC_M, XXXXXXX, _______, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
@@ -90,6 +88,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 // clang-format on
 
+void keyboard_post_init_user(void) {
+    pimoroni_trackball_set_rgbw(52, 235, 164, 0);
+    debug_enable = true;
+}
+
 layer_state_t layer_state_set_user(layer_state_t state) {
     switch (get_highest_layer(state)) {
         case L_NUMBERS:
@@ -109,6 +112,8 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    print("process_record_user");
+
     switch (keycode) {
         case C_GUI:
             if (record->event.pressed) {
@@ -123,13 +128,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true; // We didn't handle other keypresses
 };
 
-// report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
-//     if (layer_state_is(L_SYMBOLS)) {
-//         pimoroni_trackball_set_rgbw(0, 0, 0, 0);
-//     }
-//     return pointing_device_task_user(mouse_report);
-// }
-
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
     if (layer_state_is(L_NUMBERS)) {
         // mouse_report.h = mouse_report.x;
@@ -139,3 +137,41 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
     }
     return mouse_report;
 }
+
+void dance_cln_finished(qk_tap_dance_state_t *state, void *user_data) {
+    print("dance_cln_finished");
+    if (state->count == 1) {
+        register_code(KC_A);
+    }
+    if (state->count == 2) {
+        register_code16(KC_RALT);
+        register_code16(KC_QUOT);
+    }
+    if (state->count == 3) {
+        register_code16(KC_RALT);
+        register_code16(KC_GRV);
+    }
+}
+
+void dance_cln_reset(qk_tap_dance_state_t *state, void *user_data) {
+    print("dance_cln_reset");
+
+    if (state->count == 1) {
+        unregister_code(KC_A);
+    }
+    if (state->count == 2) {
+        unregister_code16(KC_RALT);
+        unregister_code16(KC_GRV);
+        tap_code(KC_A);
+    }
+    if (state->count == 3) {
+        unregister_code16(KC_RALT);
+        unregister_code16(KC_QUOT);
+        tap_code(KC_A);
+    }
+}
+
+// All tap dance functions would go here. Only showing this one.
+qk_tap_dance_action_t tap_dance_actions[] = {
+    [TD_A] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_cln_finished, dance_cln_reset),
+};
