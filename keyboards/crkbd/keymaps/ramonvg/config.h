@@ -35,5 +35,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 #define POINTING_DEVICE_ROTATION_90
-#define PIMORONI_TRACKBALL_SCALE 5
+#define PIMORONI_TRACKBALL_SCALE 10
 #define TAPPING_TERM 175

@@ -138,14 +138,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
     if (layer_state_is(L_NUMBERS)) {
-        // mouse_report.h = mouse_report.x;
-        // mouse_report.v = mouse_report.y;
         mouse_report.x = mouse_report.x * 5;
         mouse_report.y = mouse_report.y * 5;
     }
     if (layer_state_is(L_SYMBOLS)) {
-        mouse_report.h = - mouse_report.x / 3;
-        mouse_report.v = - mouse_report.y / 3;
+        mouse_report.h = -mouse_report.x / 5;
+        mouse_report.v = -mouse_report.y / 5;
         mouse_report.x = 0;
         mouse_report.y = 0;
     }
