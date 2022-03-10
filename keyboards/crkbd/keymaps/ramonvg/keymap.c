@@ -113,8 +113,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 bool is_shifted = false;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    print("process_record_user");
-
     switch (keycode) {
         case KC_LSFT:
             if (record->event.pressed) {
@@ -144,6 +142,12 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
         // mouse_report.v = mouse_report.y;
         mouse_report.x = mouse_report.x * 5;
         mouse_report.y = mouse_report.y * 5;
+    }
+    if (layer_state_is(L_SYMBOLS)) {
+        mouse_report.h = - mouse_report.x / 3;
+        mouse_report.v = - mouse_report.y / 3;
+        mouse_report.x = 0;
+        mouse_report.y = 0;
     }
     return mouse_report;
 }
