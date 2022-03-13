@@ -251,3 +251,11 @@ void leader_start(void) {
 void leader_end(void) {
     pimoroni_trackball_set_rgbw(52, 235, 164, 0);
 }
+
+void suspend_power_down_user(void) {
+    pimoroni_trackball_set_rgbw(0, 0, 0, 0);
+}
+
+void suspend_wakeup_init_user(void) {
+    pimoroni_trackball_set_rgbw(255, 0, 255, 0);
+}
