@@ -38,4 +38,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PIMORONI_TRACKBALL_SCALE 10
 #define TAPPING_TERM 175
 #define LEADER_PER_KEY_TIMING
-#define LEADER_TIMEOUT 100
+#define LEADER_TIMEOUT 300

@@ -37,7 +37,6 @@ enum { TD_A };
 #define L_MOUSE 4
 
 // clang-format off
-#define C_F MT(C_GUI, KC_F)
 #define C_J LT(L_MOUSE, KC_J)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -195,3 +194,52 @@ void dance_cln_reset(qk_tap_dance_state_t *state, void *user_data) {
 qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_A] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_cln_finished, dance_cln_reset),
 };
+
+LEADER_EXTERNS();
+
+void matrix_scan_user(void) {
+    LEADER_DICTIONARY() {
+        leading = false;
+
+        SEQ_TWO_KEYS(KC_S, KC_P) {
+            tap_code16(KC_LPRN);
+        }
+        SEQ_THREE_KEYS(KC_S, KC_P, KC_P) {
+            tap_code16(KC_RPRN);
+        }
+
+        SEQ_TWO_KEYS(KC_S, KC_B) {
+            tap_code16(KC_LBRC);
+        }
+        SEQ_THREE_KEYS(KC_S, KC_B, KC_B) {
+            tap_code16(KC_RBRC);
+        }
+
+        SEQ_TWO_KEYS(KC_S, KC_C) {
+            tap_code16(KC_LCBR);
+        }
+        SEQ_THREE_KEYS(KC_S, KC_C, KC_C) {
+            tap_code16(KC_RCBR);
+        }
+
+        SEQ_TWO_KEYS(KC_S, KC_H) {
+            tap_code16(KC_HASH);
+        }
+
+        SEQ_TWO_KEYS(KC_S, KC_A) {
+            tap_code16(KC_AMPR);
+        }
+
+        SEQ_TWO_KEYS(KC_S, KC_S) {
+            tap_code16(KC_BSLS);
+        }
+
+        leader_end();
+    }
+}
+
+void leader_start(void) {}
+
+void leader_end(void) {
+    // sequence ended (no success/failure detection)
+}
