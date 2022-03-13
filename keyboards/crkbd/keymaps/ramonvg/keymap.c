@@ -36,6 +36,8 @@ enum { TD_A };
 #define L_ADJUST 3
 #define L_MOUSE 4
 
+#define trackball_default_color pimoroni_trackball_set_rgbw(52, 235, 164, 0);
+
 // clang-format off
 #define C_J LT(L_MOUSE, KC_J)
 
@@ -140,8 +142,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false; // We handled this keypress
         case C_F:
             if (!record->tap.count && record->event.pressed) {
-                register_code(KC_LGUI); // Change the key to be held here
-                layer_on(1);
+                if (IS_LAYER_ON(L_NUMBERS)) {
+                    tap_code(KC_F); // Intercept hold function to send Ctrl-V
+                } else {
+                    register_code(KC_LGUI); // Change the key to be held here
+                    layer_on(1);
+                }
             } else {
                 if (record->event.pressed) {
                     tap_code(KC_F); // Intercept hold function to send Ctrl-V
@@ -238,8 +244,10 @@ void matrix_scan_user(void) {
     }
 }
 
-void leader_start(void) {}
+void leader_start(void) {
+    pimoroni_trackball_set_rgbw(255, 0, 255, 0);
+}
 
 void leader_end(void) {
-    // sequence ended (no success/failure detection)
+    pimoroni_trackball_set_rgbw(52, 235, 164, 0);
 }
