@@ -158,7 +158,7 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
         mouse_report.y = mouse_report.y * 5;
     }
     if (layer_state_is(L_SYMBOLS)) {
-        mouse_report.h = -mouse_report.x / 10;
+        mouse_report.h = mouse_report.x / 10;
         mouse_report.v = -mouse_report.y / 10;
         mouse_report.x = 0;
         mouse_report.y = 0;
