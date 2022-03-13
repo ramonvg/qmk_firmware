@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define POINTING_DEVICE_ROTATION_90
 #define PIMORONI_TRACKBALL_SCALE 10
-#define TAPPING_TERM 175
+#define TAPPING_TERM 300
 #define LEADER_PER_KEY_TIMING
 #define LEADER_TIMEOUT 300
+#define IGNORE_MOD_TAP_INTERRUPT

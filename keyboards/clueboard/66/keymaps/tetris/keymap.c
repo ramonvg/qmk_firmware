@@ -47,6 +47,7 @@ static uint16_t tetris_timer = 0;
 static uint8_t tetris_running = 0;
 static int tetris_keypress = 0;
 
+
 /*
  * Set up tetris
  */
@@ -105,7 +106,7 @@ void matrix_scan_user(void) {
       }
       tetris_timer = 0;
     }
-  }      
+  }
 }
 
 void tetris_send_up(void) {

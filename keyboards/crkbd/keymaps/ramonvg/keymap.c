@@ -127,10 +127,23 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     }
     return state;
 }
-bool is_shifted = false;
+bool is_shifted        = false;
+bool is_gui_registered = false;
+
+
+uint16_t key_timer; // declare key_timer for use in macro
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+        case KC_LGUI:
+            if (record->event.pressed) {
+                register_code(KC_LGUI);
+                is_gui_registered = true;
+            } else {
+                is_gui_registered = false;
+                unregister_code(KC_LGUI);
+            }
+            return false; // We handled this keypress
         case KC_LSFT:
             if (record->event.pressed) {
                 is_shifted = true;
@@ -141,23 +154,25 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false; // We handled this keypress
         case C_F:
-            if (!record->tap.count && record->event.pressed) {
-                if (IS_LAYER_ON(L_NUMBERS)) {
-                    tap_code(KC_F); // Intercept hold function to send Ctrl-V
-                } else {
-                    register_code(KC_LGUI); // Change the key to be held here
+            if (record->event.pressed) {
+                // Skip when GUI is pressed
+                key_timer = timer_read();
+
+                if (!is_gui_registered) {
+                    register_code(KC_LGUI);
                     layer_on(1);
                 }
-            } else {
-                if (record->event.pressed) {
-                    tap_code(KC_F); // Intercept hold function to send Ctrl-V
 
-                } else {
-                    unregister_code(KC_LGUI); // Change the key that was held here, too!
-                    layer_off(1);
+            } else { // Release the key
+                if (!is_gui_registered) {
+                layer_off(1);
+                unregister_code(KC_LGUI);
+                }
+                if (timer_elapsed(key_timer) < TAPPING_TERM) {
+                    tap_code(KC_F);
                 }
             }
-            return false; // We handled this keypress
+            return false;
     }
     return true; // We didn't handle other keypresses
 };
