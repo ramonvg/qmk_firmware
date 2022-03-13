@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <print.h>
 
 enum custom_keycodes {
-    C_GUI = SAFE_RANGE,
+    C_F = SAFE_RANGE,
 };
 
 enum { TD_A };
@@ -139,13 +139,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 unregister_code(KC_LSFT);
             }
             return false; // We handled this keypress
-        case C_GUI:
-            if (record->event.pressed) {
+        case C_F:
+            if (!record->tap.count && record->event.pressed) {
                 register_code(KC_LGUI); // Change the key to be held here
                 layer_on(1);
             } else {
-                unregister_code(KC_LGUI); // Change the key that was held here, too!
-                layer_off(1);
+                if (record->event.pressed) {
+                    tap_code(KC_F); // Intercept hold function to send Ctrl-V
+
+                } else {
+                    unregister_code(KC_LGUI); // Change the key that was held here, too!
+                    layer_off(1);
+                }
             }
             return false; // We handled this keypress
     }
