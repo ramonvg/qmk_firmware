@@ -130,11 +130,14 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 bool is_shifted        = false;
 bool is_gui_registered = false;
 
-
 uint16_t key_timer; // declare key_timer for use in macro
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+        if ((record->event.pressed) && timer_elapsed(key_timer) < TAPPING_TERM) {
+            layer_off(1);
+            unregister_code(KC_LGUI);
+        }
         case KC_LGUI:
             if (record->event.pressed) {
                 register_code(KC_LGUI);
@@ -165,11 +168,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
             } else { // Release the key
                 if (!is_gui_registered) {
-                layer_off(1);
-                unregister_code(KC_LGUI);
+                    layer_off(1);
+                    unregister_code(KC_LGUI);
                 }
                 if (timer_elapsed(key_timer) < TAPPING_TERM) {
                     tap_code(KC_F);
+                } else {
+                    SEND_STRING("xx");
                 }
             }
             return false;
