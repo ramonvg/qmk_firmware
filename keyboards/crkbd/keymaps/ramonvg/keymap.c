@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <print.h>
 
 enum custom_keycodes {
-    C_F = SAFE_RANGE,
+    C_X = SAFE_RANGE,
 };
 
 enum { TD_A };
@@ -38,15 +38,17 @@ enum { TD_A };
 
 #define trackball_default_color pimoroni_trackball_set_rgbw(52, 235, 164, 0);
 
-// clang-format off
 #define C_J LT(L_MOUSE, KC_J)
+#define C_F MT(KC_LGUI, KC_F)
+// clang-format off
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [L_BASE] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       KC_TAB,     KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LSFT,    KC_A,    KC_S,    KC_D,    C_F,     KC_G,                         KC_H,    C_J,     KC_K,    KC_L, KC_SCLN, KC_LEAD,
+      KC_LSFT,    KC_A,    KC_S,    KC_D,   LGUI_T(KC_F),     KC_G,                         KC_H,    C_J,     KC_K,    KC_L, KC_SCLN, KC_LEAD,
+
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LCTL,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_LALT, KC_RCTL,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
@@ -133,11 +135,13 @@ bool is_gui_registered = false;
 uint16_t key_timer; // declare key_timer for use in macro
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    // // Disable layer when typing fast enough
+    // if (record->event.pressed && timer_elapsed(key_timer) < TAPPING_TERM) {
+    //     layer_off(1);
+    //     unregister_code(KC_LGUI);
+    // }
+
     switch (keycode) {
-        if ((record->event.pressed) && timer_elapsed(key_timer) < TAPPING_TERM) {
-            layer_off(1);
-            unregister_code(KC_LGUI);
-        }
         case KC_LGUI:
             if (record->event.pressed) {
                 register_code(KC_LGUI);
@@ -156,28 +160,23 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 unregister_code(KC_LSFT);
             }
             return false; // We handled this keypress
-        case C_F:
-            if (record->event.pressed) {
-                // Skip when GUI is pressed
-                key_timer = timer_read();
+                          // case C_F:
+                          //     if (record->event.pressed) {
+                          //         key_timer = timer_read();
 
-                if (!is_gui_registered) {
-                    register_code(KC_LGUI);
-                    layer_on(1);
-                }
+            //         if (!is_gui_registered) {
+            //             register_code(KC_LGUI);
+            //             layer_on(1);
+            //         }
 
-            } else { // Release the key
-                if (!is_gui_registered) {
-                    layer_off(1);
-                    unregister_code(KC_LGUI);
-                }
-                if (timer_elapsed(key_timer) < TAPPING_TERM) {
-                    tap_code(KC_F);
-                } else {
-                    SEND_STRING("xx");
-                }
-            }
-            return false;
+            //     } else { // Release the key
+            //         layer_off(1);
+            //         unregister_code(KC_LGUI);
+            //         if (timer_elapsed(key_timer) < TAPPING_TERM) {
+            //             tap_code(KC_F);
+            //         }
+            //     }
+            //     return false;
     }
     return true; // We didn't handle other keypresses
 };
