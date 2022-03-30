@@ -38,7 +38,7 @@ enum { TD_A };
 
 #define trackball_default_color pimoroni_trackball_set_rgbw(52, 235, 164, 0);
 
-#define C_J LT(L_MOUSE, KC_J)
+#define C_H LT(L_MOUSE, KC_H)
 #define C_F MT(KC_LGUI, KC_F)
 // clang-format off
 
@@ -47,7 +47,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       KC_TAB,     KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,   KC_P, XXXXXXX, // KC_LEAD,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_ESC, LCTL_T(KC_A),LALT_T(KC_S),LSFT_T(KC_D),LGUI_T(KC_F),KC_G,             KC_H,    LGUI_T(C_J),     LSFT_T(KC_K),    LALT_T(KC_L), LCTL_T(KC_SCLN), KC_BSPC,
+      KC_ESC, LCTL_T(KC_A),LALT_T(KC_S),LSFT_T(KC_D),LGUI_T(KC_F),KC_G,             C_H,    LGUI_T(C_J),     LSFT_T(KC_K),    LALT_T(KC_L), LCTL_T(KC_SCLN), KC_BSPC,
 
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       XXXXXXX,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_LALT, KC_DEL,
