@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define POINTING_DEVICE_ROTATION_90
 #define PIMORONI_TRACKBALL_SCALE 10
-#define TAPPING_TERM 200
+#define TAPPING_TERM 190
 #define LEADER_PER_KEY_TIMING
 #define LEADER_TIMEOUT 300
 // #define TAPPING_FORCE_HOLD
