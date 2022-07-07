@@ -108,11 +108,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // clang-format on
 
 void keyboard_post_init_user(void) {
+    #ifdef POINTING_DEVICE_ENABLE
     pimoroni_trackball_set_rgbw(52, 235, 164, 0);
+    #endif /* POINTING_DEVICE_ENABLE */
     debug_enable = true;
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
+    #ifdef POINTING_DEVICE_ENABLE
     switch (get_highest_layer(state)) {
         case L_NUMBERS:
             pimoroni_trackball_set_rgbw(255, 0, 0, 0);
@@ -127,6 +130,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
             pimoroni_trackball_set_rgbw(52, 235, 164, 0);
             break;
     }
+    #endif /* POINTING_DEVICE_ENABLE */
     return state;
 }
 bool is_shifted        = false;
@@ -263,6 +267,8 @@ void matrix_scan_user(void) {
     }
 }
 
+#ifdef POINTING_DEVICE_ENABLE
+
 void leader_start(void) {
     pimoroni_trackball_set_rgbw(255, 0, 255, 0);
 }
@@ -278,3 +284,4 @@ void suspend_power_down_user(void) {
 void suspend_wakeup_init_user(void) {
     pimoroni_trackball_set_rgbw(255, 0, 255, 0);
 }
+#endif /* POINTING_DEVICE_ENABLE */
