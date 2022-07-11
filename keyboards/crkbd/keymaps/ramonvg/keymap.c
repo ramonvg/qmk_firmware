@@ -111,7 +111,7 @@ void keyboard_post_init_user(void) {
     #ifdef POINTING_DEVICE_ENABLE
     pimoroni_trackball_set_rgbw(52, 235, 164, 0);
     #endif /* POINTING_DEVICE_ENABLE */
-    debug_enable = true;
+    debug_enable = false;
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
@@ -133,71 +133,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     #endif /* POINTING_DEVICE_ENABLE */
     return state;
 }
-bool is_shifted        = false;
-bool is_gui_registered = false;
 
-uint16_t key_timer; // declare key_timer for use in macro
-
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    // // Disable layer when typing fast enough
-    // if (record->event.pressed && timer_elapsed(key_timer) < TAPPING_TERM) {
-    //     layer_off(1);
-    //     unregister_code(KC_LGUI);
-    // }
-
-    switch (keycode) {
-        case KC_LGUI:
-            if (record->event.pressed) {
-                register_code(KC_LGUI);
-                is_gui_registered = true;
-            } else {
-                is_gui_registered = false;
-                unregister_code(KC_LGUI);
-            }
-            return false; // We handled this keypress
-        case KC_LSFT:
-            if (record->event.pressed) {
-                is_shifted = true;
-                register_code(KC_LSFT);
-            } else {
-                is_shifted = false;
-                unregister_code(KC_LSFT);
-            }
-            return false; // We handled this keypress
-                          // case C_F:
-                          //     if (record->event.pressed) {
-                          //         key_timer = timer_read();
-
-            //         if (!is_gui_registered) {
-            //             register_code(KC_LGUI);
-            //             layer_on(1);
-            //         }
-
-            //     } else { // Release the key
-            //         layer_off(1);
-            //         unregister_code(KC_LGUI);
-            //         if (timer_elapsed(key_timer) < TAPPING_TERM) {
-            //             tap_code(KC_F);
-            //         }
-            //     }
-            //     return false;
-    }
-    return true; // We didn't handle other keypresses
-};
-
-report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
-    if (layer_state_is(L_NUMBERS)) {
-        mouse_report.x = mouse_report.x * 5;
-        mouse_report.y = mouse_report.y * 5;
-    }
-    if (layer_state_is(L_SYMBOLS)) {
-        mouse_report.h = mouse_report.x / 10;
-        mouse_report.v = -mouse_report.y / 10;
-        mouse_report.x = 0;
-        mouse_report.y = 0;
-    }
-    return mouse_report;
-}
 
 void dance_cln_finished(qk_tap_dance_state_t *state, void *user_data) {
     register_code(KC_RALT);
@@ -224,11 +160,12 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_A] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_cln_finished, dance_cln_reset),
 };
 
+#ifdef LEADER_ENABLE
 LEADER_EXTERNS();
 
 void matrix_scan_user(void) {
     LEADER_DICTIONARY() {
-        leading = false;
+        leading =  false;
 
         SEQ_TWO_KEYS(KC_S, KC_P) {
             tap_code16(KC_LPRN);
@@ -266,6 +203,8 @@ void matrix_scan_user(void) {
         leader_end();
     }
 }
+#endif /* LEADER_ENABLE */
+
 
 #ifdef POINTING_DEVICE_ENABLE
 
@@ -283,5 +222,19 @@ void suspend_power_down_user(void) {
 
 void suspend_wakeup_init_user(void) {
     pimoroni_trackball_set_rgbw(255, 0, 255, 0);
+}
+
+report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
+    if (layer_state_is(L_NUMBERS)) {
+        mouse_report.x = mouse_report.x * 5;
+        mouse_report.y = mouse_report.y * 5;
+    }
+    if (layer_state_is(L_SYMBOLS)) {
+        mouse_report.h = mouse_report.x / 10;
+        mouse_report.v = -mouse_report.y / 10;
+        mouse_report.x = 0;
+        mouse_report.y = 0;
+    }
+    return mouse_report;
 }
 #endif /* POINTING_DEVICE_ENABLE */
