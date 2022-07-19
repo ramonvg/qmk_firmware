@@ -35,6 +35,8 @@ enum { TD_A };
 #define L_SYMBOLS 2
 #define L_ADJUST 3
 #define L_MOUSE 4
+#define L_TILING 5
+
 
 #define trackball_default_color pimoroni_trackball_set_rgbw(52, 235, 164, 0);
 
@@ -52,7 +54,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       XXXXXXX,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_LALT, KC_DEL,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                         KC_LGUI,   MO(1),  KC_SPC,     KC_ENT,   MO(2), KC_RCTL
+                                         MO(5),   MO(1),  KC_SPC,     KC_ENT,   MO(2), C_X
                                       //`--------------------------'  `--------------------------'
 
   ),
@@ -98,6 +100,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+                                          XXXXXXX, XXXXXXX, XXXXXXX,    KC_MS_BTN1, KC_MS_BTN3, KC_MS_BTN2
+                                      //`--------------------------'  `--------------------------'
+  ),
+
+  [L_TILING] = LAYOUT_split_3x6_3(
+  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+      
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      XXXXXXX,  KC_1,    KC_2,    KC_3,    KC_4,   XXXXXXX,                      XXXXXXX, KC_5,    KC_6,    KC_7,    KC_8,   XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
@@ -238,3 +253,26 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
     return mouse_report;
 }
 #endif /* POINTING_DEVICE_ENABLE */
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+    case C_X:
+        if (record->event.pressed) {
+            // tap_code16(LGUI(KC_0));
+            // register_code(KC_LCTRL);
+            // register_code(KC_LSHIFT);
+            // tap_code(KC_M);
+            // unregister_code(KC_LCTRL);
+            // unregister_code(KC_LSHIFT);
+        } else {
+            tap_code16(LGUI(KC_0));
+            register_code(KC_LCTRL);
+            register_code(KC_LSHIFT);
+            tap_code(KC_M);
+            unregister_code(KC_LCTRL);
+            unregister_code(KC_LSHIFT);
+        }
+        break;
+    }
+    return true;
+};
