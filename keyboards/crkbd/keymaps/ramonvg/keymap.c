@@ -42,7 +42,10 @@ enum { TD_A };
 
 #define C_H LT(L_MOUSE, KC_H)
 #define C_F MT(KC_LGUI, KC_F)
+#define C_CACC RALT(KC_QUOT)	
+#define C_OACC RALT(KC_GRV)	
 // clang-format off
+
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [L_BASE] = LAYOUT_split_3x6_3(
@@ -63,7 +66,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       _______,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                       KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______,    KC_4,    KC_5,    KC_6,    _______,    DEBUG,                      KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT,XXXXXXX, KC_BSPC,
+      _______,    KC_4,    KC_5,    KC_6,    C_OACC,    C_CACC,                      KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT,XXXXXXX, KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       XXXXXXX,    KC_7,    KC_8,    KC_9,    XXXXXXX, XXXXXXX,                    XXXXXXX,    KC_M, XXXXXXX, _______, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
