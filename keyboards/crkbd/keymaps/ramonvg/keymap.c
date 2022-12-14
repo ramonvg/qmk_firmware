@@ -37,13 +37,14 @@ enum { TD_A };
 #define L_MOUSE 4
 #define L_TILING 5
 
-
 #define trackball_default_color pimoroni_trackball_set_rgbw(52, 235, 164, 0);
 
 #define C_H LT(L_MOUSE, KC_H)
 #define C_F MT(KC_LGUI, KC_F)
-#define C_CACC RALT(KC_QUOT)	
-#define C_OACC RALT(KC_GRV)	
+#define C_CACC RALT(KC_QUOT)
+#define C_OACC RALT(KC_GRV)
+
+#define PIMORONI_TRACKBALL_REG_INT 0xF9
 // clang-format off
 
 
@@ -126,14 +127,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // clang-format on
 
 void keyboard_post_init_user(void) {
-    #ifdef POINTING_DEVICE_ENABLE
+#ifdef POINTING_DEVICE_ENABLE
     pimoroni_trackball_set_rgbw(52, 235, 164, 0);
-    #endif /* POINTING_DEVICE_ENABLE */
+#endif /* POINTING_DEVICE_ENABLE */
     debug_enable = false;
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-    #ifdef POINTING_DEVICE_ENABLE
+#ifdef POINTING_DEVICE_ENABLE
     switch (get_highest_layer(state)) {
         case L_NUMBERS:
             pimoroni_trackball_set_rgbw(255, 0, 0, 0);
@@ -148,10 +149,9 @@ layer_state_t layer_state_set_user(layer_state_t state) {
             pimoroni_trackball_set_rgbw(52, 235, 164, 0);
             break;
     }
-    #endif /* POINTING_DEVICE_ENABLE */
+#endif /* POINTING_DEVICE_ENABLE */
     return state;
 }
-
 
 void dance_cln_finished(qk_tap_dance_state_t *state, void *user_data) {
     register_code(KC_RALT);
@@ -183,7 +183,7 @@ LEADER_EXTERNS();
 
 void matrix_scan_user(void) {
     LEADER_DICTIONARY() {
-        leading =  false;
+        leading = false;
 
         SEQ_TWO_KEYS(KC_S, KC_P) {
             tap_code16(KC_LPRN);
@@ -223,7 +223,6 @@ void matrix_scan_user(void) {
 }
 #endif /* LEADER_ENABLE */
 
-
 #ifdef POINTING_DEVICE_ENABLE
 
 void leader_start(void) {
@@ -242,40 +241,39 @@ void suspend_wakeup_init_user(void) {
     pimoroni_trackball_set_rgbw(255, 0, 255, 0);
 }
 
-report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
-    if (layer_state_is(L_NUMBERS)) {
-        mouse_report.x = mouse_report.x * 5;
-        mouse_report.y = mouse_report.y * 5;
-    }
-    if (layer_state_is(L_SYMBOLS)) {
-        mouse_report.h = mouse_report.x / 10;
-        mouse_report.v = -mouse_report.y / 10;
-        mouse_report.x = 0;
-        mouse_report.y = 0;
-    }
-    return mouse_report;
+void pimoroni_trackball_set_interupt(void) {
+    uint8_t                              value  = 0;
+    __attribute__((unused)) i2c_status_t status = i2c_readReg(PIMORONI_TRACKBALL_ADDRESS << 1, PIMORONI_TRACKBALL_REG_INT, &value, sizeof(uint8_t), PIMORONI_TRACKBALL_TIMEOUT);
+
+    uint8_t MSK_INT_OUT_EN = 0b00000010;
+    value &= ~MSK_INT_OUT_EN;
+    value |= MSK_INT_OUT_EN;
+
+    i2c_writeReg(PIMORONI_TRACKBALL_ADDRESS << 1, PIMORONI_TRACKBALL_REG_INT, &value, sizeof(uint8_t), PIMORONI_TRACKBALL_TIMEOUT);
 }
+
 #endif /* POINTING_DEVICE_ENABLE */
+
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-    case C_X:
-        if (record->event.pressed) {
-            // tap_code16(LGUI(KC_0));
-            // register_code(KC_LCTRL);
-            // register_code(KC_LSHIFT);
-            // tap_code(KC_M);
-            // unregister_code(KC_LCTRL);
-            // unregister_code(KC_LSHIFT);
-        } else {
-            tap_code16(LGUI(KC_0));
-            register_code(KC_LCTRL);
-            register_code(KC_LSHIFT);
-            tap_code(KC_M);
-            unregister_code(KC_LCTRL);
-            unregister_code(KC_LSHIFT);
-        }
-        break;
+        case C_X:
+            if (record->event.pressed) {
+                // tap_code16(LGUI(KC_0));
+                // register_code(KC_LCTRL);
+                // register_code(KC_LSHIFT);
+                // tap_code(KC_M);
+                // unregister_code(KC_LCTRL);
+                // unregister_code(KC_LSHIFT);
+            } else {
+                tap_code16(LGUI(KC_0));
+                register_code(KC_LCTRL);
+                register_code(KC_LSHIFT);
+                tap_code(KC_M);
+                unregister_code(KC_LCTRL);
+                unregister_code(KC_LSHIFT);
+            }
+            break;
     }
     return true;
 };
