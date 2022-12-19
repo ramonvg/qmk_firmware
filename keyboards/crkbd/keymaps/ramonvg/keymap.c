@@ -44,7 +44,6 @@ enum { TD_A };
 #define C_CACC RALT(KC_QUOT)
 #define C_OACC RALT(KC_GRV)
 
-#define PIMORONI_TRACKBALL_REG_INT 0xF9
 // clang-format off
 
 
@@ -58,7 +57,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_CAPS_LOCK,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, KC_DEL,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                         MO(5),   MO(1),  KC_SPC,     KC_ENT,   MO(2), KC_RCTRL
+                                         MO(5),   MO(1),  KC_SPC,     KC_ENT,   MO(2), KC_RCTL
                                       //`--------------------------'  `--------------------------'
 
   ),
@@ -89,7 +88,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [L_ADJUST] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      RESET,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                        KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10 , KC_F11,
+      QK_BOOT,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                        KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10 , KC_F11,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_VOLD, KC_MUTE, KC_VOLU, KC_MPRV, KC_MPLY, KC_MNXT,                       KC_HOME, KC_PGUP, KC_PGDN, KC_END, XXXXXXX, KC_F12,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -241,16 +240,6 @@ void suspend_wakeup_init_user(void) {
     pimoroni_trackball_set_rgbw(255, 0, 255, 0);
 }
 
-void pimoroni_trackball_set_interupt(void) {
-    uint8_t                              value  = 0;
-    __attribute__((unused)) i2c_status_t status = i2c_readReg(PIMORONI_TRACKBALL_ADDRESS << 1, PIMORONI_TRACKBALL_REG_INT, &value, sizeof(uint8_t), PIMORONI_TRACKBALL_TIMEOUT);
-
-    uint8_t MSK_INT_OUT_EN = 0b00000010;
-    value &= ~MSK_INT_OUT_EN;
-    value |= MSK_INT_OUT_EN;
-
-    i2c_writeReg(PIMORONI_TRACKBALL_ADDRESS << 1, PIMORONI_TRACKBALL_REG_INT, &value, sizeof(uint8_t), PIMORONI_TRACKBALL_TIMEOUT);
-}
 
 #endif /* POINTING_DEVICE_ENABLE */
 
@@ -260,18 +249,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case C_X:
             if (record->event.pressed) {
                 // tap_code16(LGUI(KC_0));
-                // register_code(KC_LCTRL);
-                // register_code(KC_LSHIFT);
+                // register_code(KC_LCTL);
+                // register_code(KC_LSFT);
                 // tap_code(KC_M);
-                // unregister_code(KC_LCTRL);
-                // unregister_code(KC_LSHIFT);
+                // unregister_code(KC_LCTL);
+                // unregister_code(KC_LSFT);
             } else {
                 tap_code16(LGUI(KC_0));
-                register_code(KC_LCTRL);
-                register_code(KC_LSHIFT);
+                register_code(KC_LCTL);
+                register_code(KC_LSFT);
                 tap_code(KC_M);
-                unregister_code(KC_LCTRL);
-                unregister_code(KC_LSHIFT);
+                unregister_code(KC_LCTL);
+                unregister_code(KC_LSFT);
             }
             break;
     }

@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* Select hand configuration */
 
-#define MASTER_RIGHT
+#define MASTER_LEFTT
 // #define EE_HANDS
 
 // #define USE_SERIAL_PD2
@@ -39,3 +39,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define IGNORE_MOD_TAP_INTERRUPT
 //#define PERMISSIVE_HOLD
 // #define DYNAMIC_TAPPING_TERM_ENABLE
+
+// to work on iphone
+#define USB_MAX_POWER_CONSUMPTION 100
