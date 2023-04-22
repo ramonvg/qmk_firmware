@@ -45,6 +45,8 @@ enum { TD_A };
 #define C_OACC RALT(KC_GRV)
 #define C_CTRE RALT(KC_COMM)
 #define C_ENYE RALT(KC_N)
+#define CTRL_ALT_R LCTL(LALT(KC_R))
+
 
 // clang-format off
 
@@ -59,7 +61,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_CAPS_LOCK,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, KC_DEL,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                         MO(5),   MO(1),  KC_SPC,     KC_ENT,   MO(2), KC_RCTL
+                                    CTRL_ALT_R,   MO(1),  KC_SPC,     KC_ENT,   MO(2), KC_RCTL
                                       //`--------------------------'  `--------------------------'
 
   ),
