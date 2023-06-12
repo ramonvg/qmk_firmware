@@ -58,7 +58,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_CAPS_LOCK,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, KC_DEL,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                         MO(5),   MO(1),  KC_SPC,     KC_ENT,   MO(2), KC_RCTRL
+                                         MO(5),   MO(1),  KC_SPC,     KC_ENT,   MO(2), KC_RCTL
                                       //`--------------------------'  `--------------------------'
 
   ),
@@ -89,7 +89,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [L_ADJUST] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      RESET,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                        KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10 , KC_F11,
+      QK_BOOT,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                        KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10 , KC_F11,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_VOLD, KC_MUTE, KC_VOLU, KC_MPRV, KC_MPLY, KC_MNXT,                       KC_HOME, KC_PGUP, KC_PGDN, KC_END, XXXXXXX, KC_F12,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -153,7 +153,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     return state;
 }
 
-void dance_cln_finished(qk_tap_dance_state_t *state, void *user_data) {
+void dance_cln_finished(tap_dance_state_t *state, void *user_data) {
     register_code(KC_RALT);
     if (state->count == 1) {
         register_code(KC_QUOT);
@@ -163,7 +163,7 @@ void dance_cln_finished(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void dance_cln_reset(qk_tap_dance_state_t *state, void *user_data) {
+void dance_cln_reset(tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
         unregister_code(KC_QUOT);
     }
@@ -174,7 +174,7 @@ void dance_cln_reset(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 // All tap dance functions would go here. Only showing this one.
-qk_tap_dance_action_t tap_dance_actions[] = {
+tap_dance_action_t tap_dance_actions[] = {
     [TD_A] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_cln_finished, dance_cln_reset),
 };
 
@@ -260,18 +260,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case C_X:
             if (record->event.pressed) {
                 // tap_code16(LGUI(KC_0));
-                // register_code(KC_LCTRL);
-                // register_code(KC_LSHIFT);
+                // register_code(KC_LCTL);
+                // register_code(KC_LSFT);
                 // tap_code(KC_M);
-                // unregister_code(KC_LCTRL);
-                // unregister_code(KC_LSHIFT);
+                // unregister_code(KC_LCTL);
+                // unregister_code(KC_LSFT);
             } else {
                 tap_code16(LGUI(KC_0));
-                register_code(KC_LCTRL);
-                register_code(KC_LSHIFT);
+                register_code(KC_LCTL);
+                register_code(KC_LSFT);
                 tap_code(KC_M);
-                unregister_code(KC_LCTRL);
-                unregister_code(KC_LSHIFT);
+                unregister_code(KC_LCTL);
+                unregister_code(KC_LSFT);
             }
             break;
     }
